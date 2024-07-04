@@ -9,6 +9,22 @@ $ git submodule update --init --recursive
 ```bash
 $ docker compose up --build
 ```
+4. Levantar hookdeck
+```
+# Levantar servidor de hookdeck
+$ hookdeck listen [PORT] stripe-to-localhost
+```
+
+
+# Prod - construir imagenes para googleCloud( habilitar artifact-registry )
+**Luego eliminar todo de google cloud (Microservices-curse)**
+```bash
+# Build images
+$ docker compose -f docker-compose.prod.yml build
+
+# Push images
+$ docker image push [NAME_IMAGE]
+```
 
 ### Pasos para crear los Git Submodules
 

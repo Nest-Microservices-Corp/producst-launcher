@@ -1,0 +1,69 @@
+version: '3'
+
+services:
+  
+  # nombre de mi red docker
+  nats-server:
+    image: nats:latest
+
+  # Client Gateway
+  client-gateway:
+    build: 
+      context: ./client-gateway
+      dockerfile: dockerfile.prod
+    image: southamerica-east1-docker.pkg.dev/microservices-curse-428420/image-registry/client-gateway
+    ports:
+      - ${CLIENT_GATEWAY_PORT}:${CLIENT_GATEWAY_PORT}
+    environment:
+      - PORT=3000
+      - NATS_SERVERS=${NATS_SERVERS}
+  
+  # Products Ms
+  products-ms:
+    build: 
+      context: ./product-ms
+      dockerfile: dockerfile.prod
+    image: southamerica-east1-docker.pkg.dev/microservices-curse-428420/image-registry/products-ms
+    environment:
+      - NATS_SERVERS=${NATS_SERVERS}
+      - DATABASE_URL=file:./dev.db
+  
+  # Orders Ms
+  orders-ms:
+    build: 
+      context: ./orders-ms
+      dockerfile: dockerfile.prod
+      args:
+        - ORDERS_DATABASE_URL=${ORDERS_DATABASE_URL}
+    image: southamerica-east1-docker.pkg.dev/microservices-curse-428420/image-registry/orders-ms
+    environment:
+      - NATS_SERVERS=${NATS_SERVERS}
+      - DATABASE_URL=${ORDERS_DATABASE_URL}
+
+  # #Payments Ms
+  payments-ms:
+    build: 
+      context: ./payments-ms
+      dockerfile: dockerfile.prod
+    image: southamerica-east1-docker.pkg.dev/microservices-curse-428420/image-registry/payments-ms
+    ports:
+      - ${PAYMENTS_MS_PORT}:${PAYMENTS_MS_PORT}
+    environment:
+      - PORT=${PAYMENTS_MS_PORT}
+      - NATS_SERVERS=${NATS_SERVERS}
+      - STRIPE_SECRET=${STRIPE_SECRET}
+      - STRIPE_SUCCESS_URL=${STRIPE_SUCCESS_URL}
+      - STRIPE_CANCEL_URL=${STRIPE_CANCEL_URL}
+      - STRIPE_ENDPOINT_SECRET=${STRIPE_ENDPOINT_SECRET}
+  
+  # Auth Ms
+  auth-ms:
+    build: 
+      context: ./auth-ms
+      dockerfile: dockerfile.prod
+    image: southamerica-east1-docker.pkg.dev/microservices-curse-428420/image-registry/auth-ms
+    environment:
+      - NATS_SERVERS=${NATS_SERVERS}
+      - DATABASE_URL=${AUTH_DATABASE_URL}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXP=${JWT_EXP}
