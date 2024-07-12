@@ -23,8 +23,6 @@ spec:
         env:
         - name: NATS_SERVERS
           value: "nats://nats"
-        - name: PORT
-          value: "3000"
         - name: DATABASE_URL
           valueFrom:
             secretKeyRef:

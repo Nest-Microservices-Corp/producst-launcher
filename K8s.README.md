@@ -38,7 +38,7 @@ kubectl create service clusterip <nombre> --tcp=<8888> --dry-run=client -o yaml 
 ```
 kubectl create secret generic <nombre> --from-literal=key=value
 
-kubectl create secret generic secret1 --from-literal=key1=value1 --from-literal=key2=value2
+kubectl create secret generic <nombre> --from-literal=key1=value1 --from-literal=key2=value2
 ```
 * Obtener los secretos `kubectl get secrets`
 * Ver el contenido de un secreto `kubectl get secrets <nombre> -o yaml`
@@ -47,7 +47,7 @@ kubectl create secret generic secret1 --from-literal=key1=value1 --from-literal=
 La forma más fácil es borrarlo y volverlo a crear pero si es más de un secret, no vamos a querer perder los demás.
 Recordar que los secrets están en `base64`, por lo que si queremos editar un secret, debemos hacerlo en `base64`.
 
-1. Editar el secret con `kubectl edit secret <nombre>` esto invocará el editor
+1. Editar el secret con `kubectl edit secret <nombre>` esto invocará el editor (para borrar kubectl delete secrets <nombre>)
 2. Cambiar el valor (se puede usar un editor en [línea para convertir a base64](https://www.rapidtables.com/web/tools/base64-decode.html))
 3. Tocar **i** para insertar líneas y editar el archivo
 4. Poner el valor a decodificar en una nueva línea
